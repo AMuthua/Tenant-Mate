@@ -1,4 +1,4 @@
-# tenantmate
+# TenantMate
 
 A new Flutter project.
 
