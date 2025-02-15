@@ -34,7 +34,7 @@ class _MaintenanceScreenState extends State<MaintenanceScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text("Maintenance Ticketing")),
+      appBar: AppBar(title: const Text("Maintenance Requests")),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
