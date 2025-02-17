@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tenantmate/views/contact/support.dart';
 import 'views/auth/maintenance/maintenance_screen.dart';
 import 'views/profile/profile_screen.dart';
 import 'views/rent/rent_screen.dart';
@@ -18,6 +19,8 @@ class TenantMateApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
+      darkTheme: ThemeData.dark(),
+      themeMode: ThemeMode.system,
       home: HomeScreen(),
     );
   }
@@ -102,6 +105,14 @@ class _HomeScreenState extends State<HomeScreen> {
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => MaintenanceScreen()));
+            },
+          ),
+          ListTile(
+            leading: Icon(Icons.contact_support, color: Colors.red),
+            title: Text("Report App Issues"),
+            onTap: () {
+              Navigator.push(context,
+                  MaterialPageRoute(builder: (context) => SupportScreen()));
             },
           ),
         ],
