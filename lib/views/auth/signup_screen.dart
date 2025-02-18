@@ -1,38 +1,36 @@
 import 'package:flutter/material.dart';
 import 'auth_service.dart';
-import 'signup_screen.dart';
-import 'package:tenantmate/main.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class SignupPage extends StatefulWidget {
+  const SignupPage({Key? key}) : super(key: key);
   
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _SignupPageState createState() => _SignupPageState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
-  // Controllers for the login fields.
+class _SignupPageState extends State<SignupPage> {
+  // Controllers for the signup fields.
+  final TextEditingController usernameController = TextEditingController();
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final TextEditingController repeatPasswordController = TextEditingController();
 
-  void _login() {
+  void _signup() {
+    String username = usernameController.text.trim();
     String email = emailController.text.trim();
-    String password = passwordController.text.trim();
-    
-    bool success = AuthService.login(email, password);
+    String password = passwordController.text;
+    String repeatPassword = repeatPasswordController.text;
+
+    bool success = AuthService.signup(username, email, password, repeatPassword);
     if (success) {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Login Successful!'),
+        content: Text('Signup Successful! Please log in.'),
         backgroundColor: Colors.green,
       ));
-      // Navigate to HomeScreen after a successful login.
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (context) => const HomeScreen()),
-      );
+      Navigator.pop(context); // Return to the Login screen.
     } else {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Invalid credentials or no account found.'),
+        content: Text('Signup failed. Make sure passwords match.'),
         backgroundColor: Colors.red,
       ));
     }
@@ -41,19 +39,32 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('Sign Up'),
+        backgroundColor: Colors.blueAccent,
+      ),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: SingleChildScrollView(
             child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  "Welcome to TenantMate",
+                  "Create an Account",
                   style: TextStyle(
                     fontSize: 24, 
                     fontWeight: FontWeight.bold, 
                     color: Colors.blueAccent,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: usernameController,
+                  decoration: InputDecoration(
+                    labelText: "Username",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16),
@@ -77,20 +88,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                 ),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: TextButton(
-                    onPressed: () {
-                      // Forgot password logic can be added here.
-                    },
-                    child: const Text("Forgot Password?"),
+                const SizedBox(height: 16),
+                TextField(
+                  controller: repeatPasswordController,
+                  obscureText: true,
+                  decoration: InputDecoration(
+                    labelText: "Repeat Password",
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(12),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 24),
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: _login,
+                    onPressed: _signup,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.blueAccent,
                       padding: const EdgeInsets.symmetric(vertical: 16),
@@ -99,27 +112,10 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                     ),
                     child: const Text(
-                      "Log In", 
+                      "Sign Up",
                       style: TextStyle(fontSize: 18, color: Colors.white),
                     ),
                   ),
-                ),
-                const SizedBox(height: 16),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text("Don't have an account?"),
-                    TextButton(
-                      onPressed: () {
-                        // Navigate to the Signup Page.
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(builder: (context) => const SignupPage()),
-                        );
-                      },
-                      child: const Text("Sign Up"),
-                    ),
-                  ],
                 ),
               ],
             ),

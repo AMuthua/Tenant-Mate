@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tenantmate/views/auth/login_screen.dart';
 import 'package:tenantmate/views/contact/support.dart';
 import 'views/auth/maintenance/maintenance_screen.dart';
 import 'views/profile/profile_screen.dart';
@@ -21,7 +22,7 @@ class TenantMateApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
-      home: HomeScreen(),
+      home: LoginScreen(),
     );
   }
 }
