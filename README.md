@@ -5,8 +5,14 @@ Our first step is to figure out how to set up all the programs.
 1. We came to figure it out it's not plug and play.
 
 Group members were paired in two's for task management. 
-    
+    1. @
+    2.
+    3.
+    4.
+    5.
+    6.
 A new Flutter project.
+
 
 ## Getting Started
 

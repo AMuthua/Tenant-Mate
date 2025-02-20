@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tenantmate/views/auth/login_screen.dart';
 import 'package:tenantmate/views/contact/support.dart';
-import 'views/auth/maintenance/maintenance_screen.dart';
+import 'views/maintenance/maintenance_screen.dart';
 import 'views/profile/profile_screen.dart';
 import 'views/rent/rent_screen.dart';
 
