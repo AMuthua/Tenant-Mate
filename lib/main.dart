@@ -1,11 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:tenantmate/views/auth/login_screen.dart';
-import 'package:tenantmate/views/contact/support.dart';
+import 'package:tenant_mate_v3/views/auth/auth_gate.dart';
+import 'package:tenant_mate_v3/views/contact/support.dart';
 import 'views/maintenance/maintenance_screen.dart';
 import 'views/profile/profile_screen.dart';
 import 'views/rent/rent_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
-void main() {
+void main() async{
+
+  WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: "https://doppzmciwnndjvnnulbf.supabase.co",
+    anonKey: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRvcHB6bWNpd25uZGp2bm51bGJmIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDAwODg4NTcsImV4cCI6MjA1NTY2NDg1N30.IzWD294K2_41mpGHTKg9y65J8ZJTbzhJa9QaUQ56gWk",
+  );
+
+
   runApp(TenantMateApp());
 }
 
@@ -22,7 +31,7 @@ class TenantMateApp extends StatelessWidget {
       ),
       darkTheme: ThemeData.dark(),
       themeMode: ThemeMode.system,
-      home: LoginScreen(),
+      home: AuthGate(),
     );
   }
 }
@@ -89,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text("Profile"),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => ProfileScreen()));
+                  MaterialPageRoute(builder: (context) => ProfilePage()));
             },
           ),
           ListTile(

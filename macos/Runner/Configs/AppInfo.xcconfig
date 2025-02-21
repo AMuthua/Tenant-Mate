@@ -5,10 +5,10 @@
 // 'flutter create' template.
 
 // The application's name. By default this is also the title of the Flutter window.
-PRODUCT_NAME = tenantmate
+PRODUCT_NAME = tenant_mate_v3
 
 // The application's bundle identifier
-PRODUCT_BUNDLE_IDENTIFIER = com.example.tenantmate
+PRODUCT_BUNDLE_IDENTIFIER = com.example.tenantMateV3
 
 // The copyright displayed in application information
 PRODUCT_COPYRIGHT = Copyright © 2025 com.example. All rights reserved.

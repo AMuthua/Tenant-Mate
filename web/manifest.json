@@ -1,6 +1,6 @@
 {
-    "name": "tenantmate",
-    "short_name": "tenantmate",
+    "name": "tenant_mate_v3",
+    "short_name": "tenant_mate_v3",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
