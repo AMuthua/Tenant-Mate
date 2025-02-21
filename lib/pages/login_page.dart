@@ -1,5 +1,6 @@
 import 'package:tenant_mate_v3/views/auth/auth_service.dart';
 import 'package:tenant_mate_v3/pages/register_page.dart';
+import 'package:tenant_mate_v3/main.dart'; // Import your HomePage
 import 'package:flutter/material.dart';
 
 class LoginPage extends StatefulWidget {
@@ -23,6 +24,11 @@ class _LoginPageState extends State<LoginPage> {
 
     try {
       await authService.SignInWithEmailPassword(email, password);
+      // Navigate to HomePage after a successful login
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const HomeScreen()),
+      );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
@@ -141,4 +147,3 @@ class _LoginPageState extends State<LoginPage> {
     );
   }
 }
-

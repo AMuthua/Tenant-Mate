@@ -1,4 +1,5 @@
 import 'package:tenant_mate_v3/views/auth/auth_service.dart';
+import 'package:tenant_mate_v3/pages/login_page.dart'; // Import your LoginPage
 import 'package:flutter/material.dart';
 
 class RegisterPage extends StatefulWidget {
@@ -24,13 +25,18 @@ class _RegisterPageState extends State<RegisterPage> {
 
     if (password != confirmPassword) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Passwords don't match")));
+        const SnackBar(content: Text("Passwords don't match")),
+      );
       return;
     }
 
     try {
       await authService.signUpWithEmailPassword(email, password);
-      Navigator.pop(context);
+      // Navigate to the LoginPage instead of simply popping
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const LoginPage()),
+      );
     } catch (e) {
       if (mounted) {
         ScaffoldMessenger.of(context)
