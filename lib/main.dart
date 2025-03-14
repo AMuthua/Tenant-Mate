@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("TenantMate Dashboard")),
+      appBar: AppBar(title: Text("Your Dashboard")),
       drawer: _buildDrawer(context),
       body: Padding(
         padding: EdgeInsets.all(16.0),
