@@ -48,10 +48,20 @@ class _HomeScreenState extends State<HomeScreen> {
   String rentStatus = "Due";
   double rentAmount = 0.0; // Initialize with a default value
 
+  void _refreshMaintenanceRequests() { // Remove async
+    _fetchMaintenanceRequests();
+  }
+
+  List<Map<String, dynamic>> maintenanceRequests = []; // Declare the list here
+  bool _isLoading = true; // Add loading state
+
   @override
   void initState() {
     super.initState();
+    
     _fetchRentAmount(); // Fetch the rent amount when the widget initializes
+    _fetchMaintenanceRequests(); // Fetch maintenance requests
+
   }
 
   Future<void> _fetchRentAmount() async {
@@ -89,11 +99,41 @@ class _HomeScreenState extends State<HomeScreen> {
       );
     }
   }
-  // Sample maintenance requests (Replace with actual database values)
-  List<Map<String, String>> maintenanceRequests = [
-    {"issue": "Leaking pipe", "status": "Pending"},
-    {"issue": "Broken AC", "status": "In Progress"},
-  ];
+
+  Future<void> _fetchMaintenanceRequests() async {
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+
+    if (user != null) {
+      try {
+        final response = await supabase
+            .from('maintenance_requests')
+            .select('request_description, status') // Select only needed columns
+            .eq('tenant_id', user.id)
+            .order('request_date', ascending: false);
+
+        setState(() {
+          maintenanceRequests = List<Map<String, dynamic>>.from(response);
+          _isLoading = false;
+        });
+      } catch (e) {
+        setState(() {
+          _isLoading = false;
+        });
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error fetching maintenance requests: $e")),
+        );
+      }
+    } else {
+      setState(() {
+        _isLoading = false;
+      });
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User not logged in")),
+      );
+    }
+  }
+  
 
   @override
   Widget build(BuildContext context) {
@@ -195,7 +235,9 @@ class _HomeScreenState extends State<HomeScreen> {
             title: Text("Maintenance"),
             onTap: () {
               Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => MaintenanceScreen()));
+                  MaterialPageRoute(builder: (context) => MaintenanceScreen(
+                    onRefresh: _refreshMaintenanceRequests,
+                  )));
             },
           ),
           ListTile(
@@ -257,43 +299,46 @@ class _HomeScreenState extends State<HomeScreen> {
   );
 }
 
-  // Maintenance Requests List
   Widget _buildMaintenanceRequests() {
-    return Expanded(
-      child: Card(
-        elevation: 4,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: Padding(
-          padding: EdgeInsets.all(16),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text("Maintenance Requests", style: TextStyle(fontSize: 16)),
-              Divider(),
-              Expanded(
-                child: ListView.builder(
-                  itemCount: maintenanceRequests.length,
-                  itemBuilder: (context, index) {
-                    var request = maintenanceRequests[index];
-                    Color statusColor = request["status"] == "Completed"
-                        ? Colors.green
-                        : request["status"] == "In Progress"
-                            ? Colors.orange
-                            : Colors.red;
+  return Expanded(
+    child: Card(
+      elevation: 4,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: Padding(
+        padding: EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text("Maintenance Requests", style: TextStyle(fontSize: 16)),
+            Divider(),
+            Expanded(
+              child: _isLoading // Show loading indicator
+                  ? const Center(child: CircularProgressIndicator())
+                  : maintenanceRequests.isEmpty
+                      ? const Center(child: Text("No maintenance requests yet."))
+                      : ListView.builder(
+                          itemCount: maintenanceRequests.length,
+                          itemBuilder: (context, index) {
+                            var request = maintenanceRequests[index];
+                            Color statusColor = request["status"] == "Done"
+                                ? Colors.green
+                                : request["status"] == "In Progress"
+                                    ? Colors.orange
+                                    : Colors.red; // "Open" is red
 
-                    return ListTile(
-                      title: Text(request["issue"]!),
-                      subtitle: Text(request["status"]!,
-                          style: TextStyle(color: statusColor)),
-                      trailing: Icon(Icons.arrow_forward_ios, size: 16),
-                    );
-                  },
-                ),
-              ),
-            ],
-          ),
+                            return ListTile(
+                              title: Text(request["request_description"] ?? "No Description"), // Handle null
+                              subtitle: Text(request["status"] ?? "Unknown",
+                                  style: TextStyle(color: statusColor)),
+                              trailing: Icon(Icons.arrow_forward_ios, size: 16),
+                            );
+                          },
+                        ),
+            ),
+          ],
         ),
       ),
-    );
-  }
+    ),
+  );
+}
 }
