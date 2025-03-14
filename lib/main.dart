@@ -46,7 +46,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // Sample rent status (replace with actual data from backend)
   String rentStatus = "Due";
-  double rentAmount = 500.00;
+  double rentAmount = 0.00;
 
   // Sample maintenance requests (Replace with actual database values)
   List<Map<String, String>> maintenanceRequests = [
