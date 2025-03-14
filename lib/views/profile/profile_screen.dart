@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:tenant_mate_v3/views/auth/auth_service.dart';
 import 'package:tenant_mate_v3/pages/login_page.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -65,6 +66,7 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
    @override
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
@@ -80,8 +82,7 @@ class _ProfilePageState extends State<ProfilePage> {
           ? const Center(child: CircularProgressIndicator())
           : Padding(
               padding: const EdgeInsets.all(16.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+              child: ListView(
                 children: [
                   // Top Up Card
                   Card(
@@ -94,47 +95,64 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Paybill: ${_userData['paybill'] ?? 'Client'}",
-                              style: const TextStyle(fontSize: 18)),
-                          IconButton(
-                            onPressed: () {
-                              Clipboard.setData(ClipboardData(
-                                  text: _userData['paybill'] ?? 'Client'));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Paybill copied")));
-                            },
-                            icon: const Icon(Icons.copy),
-                          ),
-                          Text(
-                              "Account Number: ${_userData['account_number'] ?? 'Client'}",
-                              style: const TextStyle(fontSize: 18)),
-                          IconButton(
-                            onPressed: () {
-                              Clipboard.setData(ClipboardData(
-                                  text: _userData['account_number'] ?? 'Client'));
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text("Account number copied")));
-                            },
-                            icon: const Icon(Icons.copy),
-                          ),
+                          _buildDetailRow(Icons.payment, "Paybill", _userData['paybill']),
+                          _buildDetailRow(Icons.account_balance, "Account Number", _userData['account_number']),
                         ],
                       ),
                     ),
                   ),
                   const SizedBox(height: 16),
-                  // User Details
-                  Text("Username: ${_userData['username'] ?? 'N/A'}",
-                      style: const TextStyle(fontSize: 18)),
-                  Text("Email: ${_userData['email'] ?? 'N/A'}",
-                      style: const TextStyle(fontSize: 18)),
-                  Text("House Number: ${_userData['house_number'] ?? 'N/A'}",
-                      style: const TextStyle(fontSize: 18)),
-                  // ... (other details) ...
+                  // User Details Cards
+                  _buildProfileCard(Icons.person, "Username", _userData['username']),
+                  _buildProfileCard(Icons.email, "Email", _userData['email']),
+                  _buildProfileCard(Icons.home, "House Number", _userData['house_number']),
+                  _buildProfileCard(Icons.calendar_today, "Rent Due Date", _userData['rent_due_date']),
+                  
                 ],
               ),
             ),
+    );
+  }
+
+  Widget _buildProfileCard(IconData icon, String title, String? value) {
+    String displayValue = value ?? 'Client';
+  if (title == "Rent Due Date" && value != null) {
+    try {
+      DateTime date = DateTime.parse(value);
+      displayValue = DateFormat.yMMMd().format(date); // Format the date
+    } catch (e) {
+      print("Error formatting date: $e");
+    }
+  }
+    
+    return Card(
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        leading: Icon(icon, color: Colors.orangeAccent),
+        title: Text(title, style: const TextStyle(fontWeight: FontWeight.bold)),
+        subtitle: Text(value ?? 'Client'), // Change N/A to Client
+      ),
+    );
+  }
+
+  Widget _buildDetailRow(IconData icon, String title, String? value) {
+    return Row(
+      children: [
+        Icon(icon, color: Colors.green),
+        const SizedBox(width: 8),
+        Text("$title: ", style: const TextStyle(fontWeight: FontWeight.bold)),
+        Text(value ?? 'Client'), // Change N/A to Client
+        IconButton(
+          onPressed: () {
+            Clipboard.setData(ClipboardData(text: value ?? 'Client')); // Change N/A to Client
+            ScaffoldMessenger.of(context).showSnackBar(
+                SnackBar(content: Text("$title copied")));
+          },
+          icon: const Icon(Icons.copy),
+        ),
+      ],
     );
   }
 }

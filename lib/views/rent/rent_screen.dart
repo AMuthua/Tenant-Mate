@@ -86,13 +86,13 @@ class RentScreen extends StatelessWidget {
                       content: Text("Payment functionality not implemented")),
                 );
               },
-              child: const Text('Pay Rent'),
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
+              child: const Text('Pay Rent'),
             ),
           ],
         ),
