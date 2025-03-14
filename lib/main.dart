@@ -46,8 +46,49 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // Sample rent status (replace with actual data from backend)
   String rentStatus = "Due";
-  double rentAmount = 500.00;
+  double rentAmount = 0.0; // Initialize with a default value
 
+  @override
+  void initState() {
+    super.initState();
+    _fetchRentAmount(); // Fetch the rent amount when the widget initializes
+  }
+
+  Future<void> _fetchRentAmount() async {
+    final supabase = Supabase.instance.client;
+    final user = supabase.auth.currentUser;
+
+    if (user != null) {
+      try {
+        final response = await supabase
+            .from('tenants')
+            .select('rent_amount')
+            .eq('id', user.id)
+            .single();
+
+        if (response != null && response['rent_amount'] != null) {
+          setState(() {
+            rentAmount = response['rent_amount'].toDouble();
+          });
+        } else {
+          // Handle case where rent amount is not found
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Rent amount not found")),
+          );
+        }
+      } catch (e) {
+        // Handle any errors during data fetching
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("Error fetching rent amount: $e")),
+        );
+      }
+    } else {
+      // Handle case where user is not logged in
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("User not logged in")),
+      );
+    }
+  }
   // Sample maintenance requests (Replace with actual database values)
   List<Map<String, String>> maintenanceRequests = [
     {"issue": "Leaking pipe", "status": "Pending"},
@@ -104,9 +145,49 @@ class _HomeScreenState extends State<HomeScreen> {
           ListTile(
             leading: Icon(Icons.attach_money, color: Colors.green),
             title: Text("Rent Payment"),
-            onTap: () {
-              Navigator.push(context,
-                  MaterialPageRoute(builder: (context) => RentScreen()));
+            onTap: () async {
+              final supabase = Supabase.instance.client;
+              final user = supabase.auth.currentUser;
+
+              if (user != null) {
+                try {
+                  final response = await supabase
+                      .from('tenants')
+                      .select('username, house_number')
+                      .eq('id', user.id)
+                      .single();
+
+                  if (response != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => RentScreen(
+                          tenantName: response['username'],
+                          houseNumber: response['house_number'],
+                          rentAmount: 8500.00, // Fixed rent amount
+                          dueDate: "N/A", // Or fetch from the database
+                          status: "Paid",
+                        ),
+                      ),
+                    );
+                  } else {
+                    // Handle case where user data is not found
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text("User data not found")),
+                    );
+                  }
+                } catch (e) {
+                  // Handle any errors during data fetching
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text("Error fetching data: $e")),
+                  );
+                }
+              } else {
+                // Handle case where user is not logged in
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text("User not logged in")),
+                );
+              }
             },
           ),
           ListTile(
@@ -139,30 +220,42 @@ class _HomeScreenState extends State<HomeScreen> {
             : Colors.orange;
 
     return Card(
-      elevation: 4,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: EdgeInsets.all(16),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text("Rent Status", style: TextStyle(fontSize: 16)),
-                SizedBox(height: 5),
-                Text("\KES ${rentAmount.toStringAsFixed(2)} ",
-                    style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
-                SizedBox(height: 5),
-                Text(rentStatus, style: TextStyle(fontSize: 16, color: statusColor)),
-              ],
-            ),
-            Icon(Icons.home, color: statusColor, size: 40),
-          ],
-        ),
+    elevation: 4,
+    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    child: Padding(
+      padding: EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text("Rent Status",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          SizedBox(height: 10),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Amount:",
+                      style: TextStyle(
+                          fontSize: 16, fontWeight: FontWeight.bold)),
+                  Text("\KES ${rentAmount.toStringAsFixed(2)}",
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+                ],
+              ),
+              Icon(Icons.home, color: statusColor, size: 40),
+            ],
+          ),
+          SizedBox(height: 10),
+          Text("Status:",
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+          Text(rentStatus, style: TextStyle(fontSize: 18, color: statusColor)),
+        ],
       ),
-    );
-  }
+    ),
+  );
+}
 
   // Maintenance Requests List
   Widget _buildMaintenanceRequests() {
