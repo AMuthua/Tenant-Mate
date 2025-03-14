@@ -5,6 +5,8 @@ Our first step is to figure out how to set up all the programs.
 1. We came to figure it out it's not plug and play.
 A new Flutter project.
 
+Mpesa integrations
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.
