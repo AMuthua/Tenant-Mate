@@ -1,7 +1,11 @@
+import 'package:mpesa_flutter_plugin/mpesa_flutter_plugin.dart';
+
 import 'package:flutter/material.dart';
 
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+
+import 'package:tenant_mate_v3/views/rent/keys.dart';
 
 class RentScreen extends StatelessWidget {
   final String tenantName;
@@ -84,7 +88,7 @@ class RentScreen extends StatelessWidget {
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () async {
-                await _initiateMpesaPayment(context, rentAmount);
+                await _initiateMpesaPayment(context, rentAmount, "254726108225");
               },
               style: ElevatedButton.styleFrom(
                 padding: EdgeInsets.symmetric(vertical: 16),
@@ -100,64 +104,35 @@ class RentScreen extends StatelessWidget {
     );
   }
 
-  Future<void> _initiateMpesaPayment(BuildContext context, double amount) async {
-    final url = Uri.parse('YOUR_MPESA_API_ENDPOINT'); // Replace with your M-Pesa API endpoint
-    final consumerKey = 'YOUR_CONSUMER_KEY'; // Replace with your consumer key
-    final consumerSecret = 'YOUR_CONSUMER_SECRET'; // Replace with your consumer secret
-    final phoneNumber = 'YOUR_PHONE_NUMBER'; // Replace with the tenant's phone number
-    final businessShortCode = 'YOUR_BUSINESS_SHORTCODE'; // Replace with your business shortcode
-
+  Future<void> _initiateMpesaPayment(BuildContext context, double amount, String phone) async {
     try {
-      final auth = base64Encode(utf8.encode('$consumerKey:$consumerSecret'));
-      final authResponse = await http.get(
-        Uri.parse('YOUR_MPESA_AUTH_ENDPOINT'), // Replace with your M-Pesa auth endpoint
-        headers: {'Authorization': 'Basic $auth'},
+      // Set your consumer key and secret (do this only once, e.g., in your main() or initState())
+      MpesaFlutterPlugin.setConsumerKey(kConsumerKey);
+      MpesaFlutterPlugin.setConsumerSecret(kConsumerSecret);
+
+      dynamic transactionInitialisation =
+          await MpesaFlutterPlugin.initializeMpesaSTKPush(
+        businessShortCode: "174379",
+        transactionType: TransactionType.CustomerPayBillOnline,
+        amount: amount, // Amount as string
+        partyA: "254726108225", // Tenant's phone number
+        partyB: "174379",
+        callBackURL: Uri(
+                  scheme: "https", host: "1234.1234.co.ke", path: "/1234.php"),
+        accountReference: "Rent Payment",
+        phoneNumber: "254726108225", // Tenant's phone number
+        baseUri: Uri(scheme: "https", host: "sandbox.safaricom.co.ke"), // Or MpesaFlutterPlugin.liveURL
+        transactionDesc: 'Rent Payment Demo',
+        passKey: "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
       );
 
-      if (authResponse.statusCode == 200) {
-        final authToken = json.decode(authResponse.body)['access_token'];
+      print('M-Pesa response: $transactionInitialisation');
 
-        final timestamp = DateTime.now().toIso8601String().replaceAll(RegExp(r'[-:.]'), '');
-        final password = base64Encode(utf8.encode('$businessShortCode$consumerKey$timestamp'));
-
-        final body = json.encode({
-          "BusinessShortCode": 174379,
-          "Password": password,
-          "Timestamp": timestamp,
-          "TransactionType": "CustomerPayBillOnline",
-          "Amount": amount.toInt(),
-          "PartyA": phoneNumber,
-          "PartyB": businessShortCode,
-          "PhoneNumber": phoneNumber,
-          "CallBackURL": "YOUR_CALLBACK_URL", // Replace with your callback URL
-          "AccountReference": "Rent Payment",
-          "TransactionDesc": "Rent Payment",
-        });
-
-        final response = await http.post(
-          url,
-          headers: {
-            'Authorization': 'Bearer $authToken',
-            'Content-Type': 'application/json',
-          },
-          body: body,
-        );
-
-        if (response.statusCode == 200) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("M-Pesa request initiated. Check your phone.")),
-          );
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(content: Text("M-Pesa request failed: ${response.body}")),
-          );
-        }
-      } else {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("M-Pesa auth failed: ${authResponse.body}")),
-        );
-      }
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text("M-Pesa request initiated. Check your phone.")),
+      );
     } catch (e) {
+      print('M-Pesa error: $e');
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text("Error initiating M-Pesa: $e")),
       );
