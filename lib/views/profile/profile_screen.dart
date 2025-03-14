@@ -94,12 +94,12 @@ class _ProfilePageState extends State<ProfilePage> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text("Paybill: ${_userData['paybill'] ?? 'N/A'}",
+                          Text("Paybill: ${_userData['paybill'] ?? 'Client'}",
                               style: const TextStyle(fontSize: 18)),
                           IconButton(
                             onPressed: () {
                               Clipboard.setData(ClipboardData(
-                                  text: _userData['paybill'] ?? ''));
+                                  text: _userData['paybill'] ?? 'Client'));
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text("Paybill copied")));
@@ -107,12 +107,12 @@ class _ProfilePageState extends State<ProfilePage> {
                             icon: const Icon(Icons.copy),
                           ),
                           Text(
-                              "Account Number: ${_userData['account_number'] ?? 'N/A'}",
+                              "Account Number: ${_userData['account_number'] ?? 'Client'}",
                               style: const TextStyle(fontSize: 18)),
                           IconButton(
                             onPressed: () {
                               Clipboard.setData(ClipboardData(
-                                  text: _userData['account_number'] ?? ''));
+                                  text: _userData['account_number'] ?? 'Client'));
                               ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(
                                       content: Text("Account number copied")));
