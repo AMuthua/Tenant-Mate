@@ -31,7 +31,9 @@ dependencies:
   flutter:
     sdk: flutter
   clipboard: ^0.1.3 
-  # copying the client details to app for easier Multitasking
+  # copying the client details to app for easier Multitasking, enabling to copy and paste
+    # My Safaricom app
+    # Mpesa App.
   intl: ^0.18.0  
   flutter_launcher_icons: ^0.10.0
 
