@@ -30,7 +30,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  clipboard: ^0.1.3 // copying the client details to app for easier Multitasking
+  clipboard: ^0.1.3 
+  # copying the client details to app for easier Multitasking
   intl: ^0.18.0  
   flutter_launcher_icons: ^0.10.0
 
