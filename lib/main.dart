@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tenant_mate_v3/views/auth/auth_gate.dart';
-import 'package:tenant_mate_v3/views/contact/support.dart';
+import 'package:tenant_mate_v3/views/contact/anon_tick.dart';
 import 'views/maintenance/maintenance_screen.dart';
 import 'views/profile/profile_screen.dart';
 import 'views/rent/rent_screen.dart';
