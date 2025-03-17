@@ -204,7 +204,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         builder: (context) => RentScreen(
                           tenantName: response['username'],
                           houseNumber: response['house_number'],
-                          rentAmount: 8500.00, // Fixed rent amount
+                          rentAmount: 10.00, // Fixed rent amount for testing purposes... 
                           dueDate: "N/A", // Or fetch from the database
                           status: "Paid",
                         ),
