@@ -242,7 +242,7 @@ class _HomeScreenState extends State<HomeScreen> {
           ),
           ListTile(
             leading: Icon(Icons.contact_support, color: Colors.red),
-            title: Text("Report App Issues"),
+            title: Text("Anonymous Complaints"),
             onTap: () {
               Navigator.push(context,
                   MaterialPageRoute(builder: (context) => SupportScreen()));

@@ -6,8 +6,8 @@ class SupportScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Contact Support")),
-      body: Center(child: Text("Report Errors and Crashes Here")),
+      appBar: AppBar(title: Text("Anonymous Report")),
+      body: Center(child: Text("Coming soon, you can now notify the Agents anonymously of any incidences or mishaps")),
     );
   }
 }
