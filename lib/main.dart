@@ -61,7 +61,7 @@ class _HomeScreenState extends State<HomeScreen> {
     
     _fetchRentAmount(); // Fetch the rent amount when the widget initializes
     _fetchMaintenanceRequests(); // Fetch maintenance requests
-
+  
   }
 
   Future<void> _fetchRentAmount() async {
@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Icon(Icons.account_circle, size: 64, color: Colors.white),
                 SizedBox(height: 10),
-                Text("Welcome, Tenant!",
+                Text("At your Service,!",
                     style: TextStyle(color: Colors.white, fontSize: 18)),
               ],
             ),

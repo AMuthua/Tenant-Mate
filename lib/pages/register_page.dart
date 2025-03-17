@@ -218,6 +218,7 @@ class _RegisterPageState extends State<RegisterPage> {
           'rent_due_date': '2025-02-01',
           'rent_status': 'Paid',
           'rent_amount': 500.00,
+          'created_at': DateTime.now().toUtc().toIso8601String(), // Add this!
         });
 
         // Navigate to the LoginPage
