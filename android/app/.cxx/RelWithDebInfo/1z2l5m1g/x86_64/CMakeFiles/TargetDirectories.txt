@@ -1,0 +1,2 @@
+A:/MKU Bachelors/Jan - April 2025/Mobile-App-Development/tenantmate/android/app/.cxx/RelWithDebInfo/1z2l5m1g/x86_64/CMakeFiles/edit_cache.dir
+A:/MKU Bachelors/Jan - April 2025/Mobile-App-Development/tenantmate/android/app/.cxx/RelWithDebInfo/1z2l5m1g/x86_64/CMakeFiles/rebuild_cache.dir
