@@ -169,7 +169,7 @@ class _HomeScreenState extends State<HomeScreen> {
               children: [
                 Icon(Icons.account_circle, size: 64, color: Colors.white),
                 SizedBox(height: 10),
-                Text("At your Service,!",
+                Text("At your service!",
                     style: TextStyle(color: Colors.white, fontSize: 18)),
               ],
             ),
